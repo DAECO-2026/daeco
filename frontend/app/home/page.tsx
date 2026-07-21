@@ -1,59 +1,65 @@
 import Link from "next/link";
+import Image from "next/image";
 import BottomNav from "../components/BottomNav";
 import {
-  MenuIcon,
+  SearchIcon,
   PinIcon,
   ChevronRightIcon,
+  ClockIcon,
   PlusIcon,
+  LeafIcon,
+  UtensilsIcon,
+  MuseumIcon,
+  MoonIcon,
 } from "../components/icons";
 
-type Route = {
-  title: string;
-  date: string;
-  places: string[];
-  duration: string;
-  distance: string;
-};
-
-// 임시 목업 데이터 (추후 API 연동)
-const RECENT_ROUTES: Route[] = [
+const THEMES = [
+  { label: "자연 힐링", Icon: LeafIcon, bg: "bg-green-50", fg: "text-green-600" },
   {
-    title: "실내 구경 루트",
-    date: "2026.07.20 (월)",
-    places: ["성심당 본점", "대전근현대사전시관", "소품샵", "대전역"],
-    duration: "2시간 30분",
-    distance: "1.8km",
+    label: "맛집 투어",
+    Icon: UtensilsIcon,
+    bg: "bg-orange-50",
+    fg: "text-orange-500",
   },
   {
-    title: "야구 후 여유 루트",
-    date: "2026.07.01 (월)",
-    places: ["한화생명 이글스파크", "한밭수목원", "카페", "대전역"],
-    duration: "1시간 26분",
-    distance: "3.6km",
+    label: "문화·힐링",
+    Icon: MuseumIcon,
+    bg: "bg-violet-50",
+    fg: "text-violet-500",
   },
+  { label: "대전 야경", Icon: MoonIcon, bg: "bg-sky-50", fg: "text-sky-500" },
 ];
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-white">
+    <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-white">
+      {/* 스카이라인 워터마크 */}
+      <Image
+        src="/city.png"
+        alt=""
+        width={414}
+        height={317}
+        priority
+        className="pointer-events-none absolute left-0 top-0 w-full opacity-[0.06] invert"
+      />
+
       {/* 헤더 */}
-      <header className="relative flex items-center justify-center py-5">
-        <button
-          type="button"
-          aria-label="메뉴 열기"
-          className="absolute left-6 text-zinc-800"
-        >
-          <MenuIcon className="h-6 w-6" />
-        </button>
+      <header className="relative z-10 flex items-center justify-center py-5">
         <span className="text-xl font-extrabold tracking-tight text-brand">
           DAECO
         </span>
+        <button
+          type="button"
+          aria-label="검색"
+          className="absolute right-6 text-zinc-700"
+        >
+          <SearchIcon className="h-6 w-6" />
+        </button>
       </header>
 
-      {/* 본문 */}
-      <div className="min-h-0 flex-1 overflow-y-auto pb-4">
+      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-6 pb-6">
         {/* 인사 */}
-        <section className="px-6 pt-3">
+        <section className="pt-2">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-lg font-bold text-zinc-800">안녕하세요!</p>
@@ -70,54 +76,85 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* 최근 루트 */}
-        <section className="mt-9 px-6">
+        {/* 오늘의 추천 코스 */}
+        <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-zinc-900">최근 루트</h2>
+            <h2 className="text-base font-bold text-zinc-900">
+              오늘의 추천 코스
+            </h2>
             <button
               type="button"
               className="flex items-center gap-0.5 text-sm text-zinc-400"
             >
-              전체 보기
+              더보기
               <ChevronRightIcon className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {RECENT_ROUTES.map((route) => (
+          <button
+            type="button"
+            className="mt-3 flex w-full gap-3 rounded-2xl border border-zinc-200 p-3 text-left transition-colors hover:bg-zinc-50"
+          >
+            <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-[11px] text-zinc-400">
+              대표 사진
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-zinc-900">대전 핫플 완전 정복</h3>
+                <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-brand">
+                  인기
+                </span>
+              </div>
+              <p className="mt-1.5 truncate text-[13px] text-zinc-500">
+                성심당 본점 → 카페 → 소품샵 → 대전역
+              </p>
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-zinc-400">
+                <ClockIcon className="h-3.5 w-3.5" />
+                2시간 30분 · 예상 금액 ₩21,000원
+              </p>
+            </div>
+          </button>
+        </section>
+
+        {/* 테마별로 돌려보기 */}
+        <section className="mt-8">
+          <h2 className="text-base font-bold text-zinc-900">
+            테마별로 돌려보기
+          </h2>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            {THEMES.map(({ label, Icon, bg, fg }) => (
               <button
-                key={route.title}
+                key={label}
                 type="button"
-                className="flex w-full items-center gap-3 rounded-2xl border border-zinc-200 px-5 py-4 text-left transition-colors hover:bg-zinc-50"
+                className={`flex items-center gap-3 rounded-2xl ${bg} px-4 py-4`}
               >
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <h3 className="font-bold text-zinc-900">{route.title}</h3>
-                    <span className="text-xs text-zinc-400">{route.date}</span>
-                  </div>
-                  <p className="mt-2 text-[13px] leading-5 text-zinc-500">
-                    {route.places.join(" → ")}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-400">
-                    {route.duration} · {route.distance}
-                  </p>
-                </div>
-                <ChevronRightIcon className="h-5 w-5 shrink-0 text-zinc-300" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/70">
+                  <Icon className={`h-5 w-5 ${fg}`} />
+                </span>
+                <span className="font-bold text-zinc-800">{label}</span>
               </button>
             ))}
           </div>
-
-          {/* 새 루트 만들기 */}
-          <Link
-            href="/input"
-            className="mt-5 flex items-center justify-center gap-2 rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
-          >
-            <PlusIcon className="h-5 w-5" />새 루트 만들기
-          </Link>
         </section>
+
+        {/* 새 루트 만들기 */}
+        <Link
+          href="/input"
+          className="mt-7 flex items-center justify-center gap-2 rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong"
+        >
+          <PlusIcon className="h-5 w-5" />새 루트 만들기
+        </Link>
+
+        {/* 하단 도들 장식 */}
+        <Image
+          src="/route-doodle.png"
+          alt=""
+          width={371}
+          height={210}
+          className="pointer-events-none mt-6 ml-auto w-3/5 opacity-40"
+        />
       </div>
 
-      {/* 하단 탭 */}
       <BottomNav />
     </div>
   );

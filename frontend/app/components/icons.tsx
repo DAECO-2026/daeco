@@ -93,6 +93,63 @@ export function BookmarkIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+/** 잎 (자연) */
+export function LeafIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M20 4C9 4 4 9.5 4 16c0 1.5.3 2.8.8 4C6 15 10 11.5 17 10c-5 2.5-8 6-9.2 11 8 1 12.2-4 12.2-13V4Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+/** 수저/포크 (맛집) */
+export function UtensilsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M7 3v7m-2.5-7v4a2.5 2.5 0 0 0 5 0V3M7 10v11M17 3c-1.7 0-3 2-3 5s1 4 3 4m0 0v9m0-9V3"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** 박물관 (문화) */
+export function MuseumIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M12 3 4 7.5h16L12 3Z"
+        fill="currentColor"
+      />
+      <path
+        d="M5 11v6m4-6v6m6-6v6m4-6v6M3.5 20.5h17"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** 달 (야경) */
+export function MoonIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 /** 자동차 */
 export function CarIcon(props: SVGProps<SVGSVGElement>) {
   return (

@@ -32,10 +32,18 @@ function formatDist(km: number): string {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km}km`;
 }
 
-// 백엔드에 이미지가 없는 장소용 프론트 폴백 이미지 (장소명 기준)
+// 백엔드에 이미지가 없는 장소용 프론트 폴백 이미지 (장소명 부분 일치)
 const PLACE_IMAGE_FALLBACK: Record<string, string> = {
   충남대: "https://cdn.cctoday.co.kr/news/photo/202504/2211353_657609_2233.jpg",
 };
+
+/** 장소명에 폴백 키가 포함되면 해당 이미지 반환 (예: "충남대학교" → "충남대") */
+function fallbackImage(name: string): string | null {
+  for (const [key, url] of Object.entries(PLACE_IMAGE_FALLBACK)) {
+    if (name.includes(key)) return url;
+  }
+  return null;
+}
 
 function transportIcon(t: string) {
   if (t.includes("도보") || t.includes("걷")) return WalkIcon;
@@ -193,7 +201,7 @@ export default function RouteDetailPage() {
                           )}
                         </div>
                         <StopImage
-                          url={s.imageUrl ?? PLACE_IMAGE_FALLBACK[s.locationName] ?? null}
+                          urls={[fallbackImage(s.locationName), s.imageUrl]}
                         />
 
                       </div>
@@ -240,10 +248,12 @@ export default function RouteDetailPage() {
   );
 }
 
-/** 장소 이미지 — URL 없거나 로드 실패 시 placeholder */
-function StopImage({ url }: { url: string | null }) {
-  const [failed, setFailed] = useState(false);
-  if (!url || failed) {
+/** 장소 이미지 — 후보 URL을 순서대로 시도하고, 모두 실패하면 placeholder */
+function StopImage({ urls }: { urls: (string | null)[] }) {
+  const candidates = urls.filter((u): u is string => !!u);
+  const [idx, setIdx] = useState(0);
+
+  if (idx >= candidates.length) {
     return (
       <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-[11px] text-zinc-400">
         상점별 사진
@@ -253,10 +263,11 @@ function StopImage({ url }: { url: string | null }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={url}
+      key={candidates[idx]}
+      src={candidates[idx]}
       alt=""
       referrerPolicy="no-referrer"
-      onError={() => setFailed(true)}
+      onError={() => setIdx((i) => i + 1)}
       className="h-16 w-20 shrink-0 rounded-xl object-cover"
     />
   );
