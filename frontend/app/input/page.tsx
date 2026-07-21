@@ -12,11 +12,26 @@ import {
 } from "../components/icons";
 import { requestRouteRecommendation, toLocalTime } from "../lib/api";
 import type { RouteRequest } from "../lib/types";
+import TimeWheelPicker from "../components/TimeWheelPicker";
 
 const TRANSPORTS = ["택시", "대중교통", "도보"];
 
 const inputClass =
   "w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm text-zinc-800 placeholder:text-zinc-400 focus:border-brand focus:outline-none";
+
+/** 숫자만 남겨 천단위 콤마로 포맷 ("1000" → "1,000") */
+function formatNumber(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  return digits ? Number(digits).toLocaleString("ko-KR") : "";
+}
+
+/** "HH:mm"(24h) → "오전/오후 hh:mm" 표시용 */
+function formatDisplayTime(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  const ampm = h < 12 ? "오전" : "오후";
+  const h12 = h % 12 || 12;
+  return `${ampm} ${String(h12).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
 
 function Chip({
   label,
@@ -53,6 +68,9 @@ export default function CreateRoutePage() {
   const [arriveLocation, setArriveLocation] = useState("대전역");
   const [deadLine, setDeadLine] = useState("18:00");
   const [transports, setTransports] = useState<string[]>([]);
+
+  // 시간 피커 (열린 대상)
+  const [picker, setPicker] = useState<"cur" | "dead" | null>(null);
 
   // 요청 상태
   const [submitting, setSubmitting] = useState(false);
@@ -154,16 +172,15 @@ export default function CreateRoutePage() {
           <label className="text-[15px] font-bold text-zinc-900">
             시간입력
           </label>
-          <div className="relative mt-2">
+          <button
+            type="button"
+            onClick={() => setPicker("cur")}
+            className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-11 text-left text-sm text-zinc-800"
+          >
             <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-            <input
-              type="text"
-              value={curTime}
-              onChange={(e) => setCurTime(e.target.value)}
-              className={`${inputClass} px-11`}
-            />
-            <ChevronDownIcon className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
-          </div>
+            {formatDisplayTime(curTime)}
+            <ChevronDownIcon className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
+          </button>
         </section>
 
         {/* 총 예산 입력 */}
@@ -172,14 +189,18 @@ export default function CreateRoutePage() {
             총 예산 입력
           </label>
           <div className="relative mt-2">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-zinc-400">
+            <span
+              className={`absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold ${
+                budget ? "text-zinc-800" : "text-zinc-400"
+              }`}
+            >
               ₩
             </span>
             <input
               type="text"
               inputMode="numeric"
               value={budget}
-              onChange={(e) => setBudget(e.target.value)}
+              onChange={(e) => setBudget(formatNumber(e.target.value))}
               placeholder="최소 금액 1,000원 이상"
               className={`${inputClass} pl-9`}
             />
@@ -206,15 +227,14 @@ export default function CreateRoutePage() {
             <label className="text-[15px] font-bold text-zinc-900">
               복귀 마감 시각
             </label>
-            <div className="relative mt-2">
+            <button
+              type="button"
+              onClick={() => setPicker("dead")}
+              className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-4 text-left text-sm text-zinc-800"
+            >
               <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-              <input
-                type="text"
-                value={deadLine}
-                onChange={(e) => setDeadLine(e.target.value)}
-                className={`${inputClass} pl-11`}
-              />
-            </div>
+              {formatDisplayTime(deadLine)}
+            </button>
           </div>
         </section>
 
@@ -254,6 +274,19 @@ export default function CreateRoutePage() {
           {submitting ? "루트 추천 받는 중..." : "AI 루트 추천받기"}
         </button>
       </div>
+
+      {/* 시간 휠 피커 */}
+      {picker && (
+        <TimeWheelPicker
+          initial={picker === "cur" ? curTime : deadLine}
+          onConfirm={(v) => {
+            if (picker === "cur") setCurTime(v);
+            else setDeadLine(v);
+            setPicker(null);
+          }}
+          onClose={() => setPicker(null)}
+        />
+      )}
     </div>
   );
 }
