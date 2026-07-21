@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import type { RouteResponse, RouteOption } from "../lib/types";
 import BottomNav from "../components/BottomNav";
+import KakaoRouteMap from "../components/KakaoRouteMap";
 import { SearchIcon, BookmarkIcon } from "../components/icons";
 
 const FILTERS = ["추천 루트", "카페", "맛집", "관광"];
@@ -78,14 +79,12 @@ export default function MapPage() {
         ))}
       </div>
 
-      {/* 지도 (카카오 JS SDK 연결 예정) */}
-      <div className="relative h-64 shrink-0 bg-zinc-100">
-        <div className="flex h-full items-center justify-center text-center text-sm text-zinc-400">
-          카카오 지도 영역
-          <br />
-          (JS 키 연결 후 표시)
-        </div>
-      </div>
+      {/* 지도 */}
+      <KakaoRouteMap
+        options={options}
+        selected={selected}
+        className="h-64 w-full shrink-0 bg-zinc-100"
+      />
 
       {/* 추천 루트 카드 + 시작 버튼 */}
       <div className="flex min-h-0 flex-1 flex-col">
