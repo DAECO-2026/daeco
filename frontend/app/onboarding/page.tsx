@@ -22,22 +22,22 @@ export default function OnboardingPage() {
         </p>
       </div>
 
-      {/* 지도 일러스트 (왼쪽 모서리에 붙임) */}
-      <div className="-mx-8 flex flex-1 items-center justify-start">
+      {/* 지도 일러스트 (좌우 꽉 차게) */}
+      <div className="-mx-8 flex flex-1 items-center justify-center">
         <Image
           src="/map.png"
           alt="추천 루트 지도"
-          width={553}
-          height={486}
+          width={398}
+          height={429}
           priority
-          className="h-auto w-[112%] max-w-none"
+          className="h-auto w-full"
         />
       </div>
 
       {/* 시작 버튼 */}
       <button
         type="button"
-        onClick={() => router.push("/input")}
+        onClick={() => router.push("/home")}
         className="w-full rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
       >
         시작하기
