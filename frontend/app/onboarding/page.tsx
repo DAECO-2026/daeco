@@ -37,7 +37,7 @@ export default function OnboardingPage() {
       {/* 시작 버튼 */}
       <button
         type="button"
-        onClick={() => router.push("/input")}
+        onClick={() => router.push("/home")}
         className="w-full rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
       >
         시작하기
