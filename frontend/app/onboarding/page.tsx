@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import RouteMap from "../components/RouteMap";
+import Image from "next/image";
 
 export default function OnboardingPage() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-1 flex-col bg-white px-8 pt-16 pb-10">
+    <div className="animate-fade-in-up flex flex-1 flex-col bg-white px-8 pt-16 pb-10">
       {/* 헤드라인 */}
       <div className="text-center">
         <h1 className="text-2xl font-bold leading-9 text-brand-ink">
@@ -24,7 +24,14 @@ export default function OnboardingPage() {
 
       {/* 지도 일러스트 */}
       <div className="flex flex-1 items-center justify-center">
-        <RouteMap className="w-full max-w-[320px]" />
+        <Image
+          src="/map.png"
+          alt="추천 루트 지도"
+          width={553}
+          height={486}
+          priority
+          className="h-auto w-full max-w-[330px]"
+        />
       </div>
 
       {/* 시작 버튼 */}
