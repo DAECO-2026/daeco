@@ -63,11 +63,11 @@ export default function CreateRoutePage() {
 
   // 폼 상태
   const [routeName, setRouteName] = useState("");
-  const [currentLocation, setCurrentLocation] = useState("성심당 본점");
+  const [currentLocation, setCurrentLocation] = useState("");
   const [locating, setLocating] = useState(false);
   const [curTime, setCurTime] = useState("15:20");
   const [budget, setBudget] = useState("");
-  const [arriveLocation, setArriveLocation] = useState("대전역");
+  const [arriveLocation, setArriveLocation] = useState("");
   const [deadLine, setDeadLine] = useState("18:00");
   const [transports, setTransports] = useState<string[]>([]);
 
@@ -196,8 +196,14 @@ export default function CreateRoutePage() {
             <LocationOutlineIcon className="h-5 w-5 shrink-0 text-zinc-500" />
             <div className="min-w-0 flex-1">
               <p className="text-xs text-zinc-400">현재 위치</p>
-              <p className="truncate text-sm font-medium text-zinc-800">
-                {locating ? "위치 확인 중..." : currentLocation}
+              <p
+                className={`truncate text-sm font-medium ${
+                  currentLocation ? "text-zinc-800" : "text-zinc-400"
+                }`}
+              >
+                {locating
+                  ? "위치 확인 중..."
+                  : currentLocation || "현재 위치를 가져오세요"}
               </p>
             </div>
             <button
@@ -264,7 +270,9 @@ export default function CreateRoutePage() {
               className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-4 text-left text-sm text-zinc-800"
             >
               <LocationOutlineIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-              <span className="truncate">{arriveLocation}</span>
+              <span className={`truncate ${arriveLocation ? "" : "text-zinc-400"}`}>
+                {arriveLocation || "장소 선택"}
+              </span>
             </button>
           </div>
           <div>

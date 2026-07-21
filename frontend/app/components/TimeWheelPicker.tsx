@@ -105,11 +105,11 @@ export default function TimeWheelPicker({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/40"
+      className="animate-fade-in fixed inset-0 z-50 flex flex-col justify-end bg-black/40"
       onClick={onClose}
     >
       <div
-        className="mx-auto w-full max-w-[430px] rounded-t-3xl bg-white pb-8"
+        className="animate-slide-up mx-auto w-full max-w-[430px] rounded-t-3xl bg-white pb-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
