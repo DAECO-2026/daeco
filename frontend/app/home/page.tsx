@@ -45,7 +45,7 @@ export default function HomePage() {
 
       {/* 헤더 */}
       <header className="relative z-10 flex items-center justify-center py-5">
-        <span className="text-xl font-extrabold tracking-tight text-brand">
+        <span className="text-3xl font-extrabold tracking-tight text-brand">
           DAECO
         </span>
         <button
