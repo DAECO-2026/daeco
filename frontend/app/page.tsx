@@ -40,7 +40,15 @@ export default function SplashPage() {
       }}
     >
       {/* 로고 · 슬로건 */}
-      <div className="flex flex-1 flex-col items-center justify-center pb-24">
+      <div className="flex flex-1 flex-col items-center justify-start pt-24">
+        <Image
+          src="/route-doodle.png"
+          alt=""
+          width={371}
+          height={210}
+          priority
+          className="pointer-events-none mb-4 w-72"
+        />
         <h1 className="text-6xl font-black tracking-tight drop-shadow-sm">
           DAECO
         </h1>
