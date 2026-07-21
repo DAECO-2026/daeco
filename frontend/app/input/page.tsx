@@ -71,7 +71,7 @@ export default function CreateRoutePage() {
     );
 
   return (
-    <div className="flex flex-1 flex-col bg-white">
+    <div className="flex min-h-0 flex-1 flex-col bg-white">
       {/* 헤더 */}
       <header className="relative flex items-center justify-center px-6 py-5">
         <button
@@ -86,7 +86,7 @@ export default function CreateRoutePage() {
       </header>
 
       {/* 폼 */}
-      <div className="flex-1 overflow-y-auto px-6 pb-6">
+      <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-6">
         {/* 루트 이름 */}
         <section>
           <label className="text-[15px] font-bold text-zinc-900">

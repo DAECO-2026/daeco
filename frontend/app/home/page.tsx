@@ -35,7 +35,7 @@ const RECENT_ROUTES: Route[] = [
 
 export default function HomePage() {
   return (
-    <div className="flex flex-1 flex-col bg-white">
+    <div className="flex min-h-0 flex-1 flex-col bg-white">
       {/* 헤더 */}
       <header className="relative flex items-center justify-center py-5">
         <button
@@ -51,7 +51,7 @@ export default function HomePage() {
       </header>
 
       {/* 본문 */}
-      <div className="flex-1 overflow-y-auto pb-4">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-4">
         {/* 인사 */}
         <section className="px-6 pt-3">
           <div className="flex items-start justify-between">

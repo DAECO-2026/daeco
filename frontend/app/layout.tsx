@@ -33,8 +33,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="h-full">
-        {/* 모바일 웹앱 프레임: 데스크톱에서는 가운데 정렬된 폰 너비 컬럼 */}
-        <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-white shadow-xl">
+        {/* 모바일 웹앱 프레임: 뷰포트 높이 고정, 내부에서 스크롤 (헤더·하단 버튼 고정) */}
+        <div className="mx-auto flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-white shadow-xl">
           {children}
         </div>
       </body>
