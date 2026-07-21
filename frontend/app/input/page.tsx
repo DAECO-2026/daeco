@@ -92,13 +92,23 @@ export default function CreateRoutePage() {
     setError(null);
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const { latitude, longitude } = pos.coords;
-        // TODO: 카카오 지도 API로 좌표 → 장소명 역지오코딩
-        setCurrentLocation(
-          `위도 ${latitude.toFixed(5)}, 경도 ${longitude.toFixed(5)}`,
-        );
-        setLocating(false);
+        const fallback = `위도 ${latitude.toFixed(5)}, 경도 ${longitude.toFixed(5)}`;
+        try {
+          // 카카오 역지오코딩(서버 프록시)으로 좌표 → 주소 변환
+          const res = await fetch(
+            `/api/geocode?lat=${latitude}&lng=${longitude}`,
+          );
+          const data = await res.json();
+          setCurrentLocation(
+            res.ok && data.placeName ? data.placeName : fallback,
+          );
+        } catch {
+          setCurrentLocation(fallback);
+        } finally {
+          setLocating(false);
+        }
       },
       (err) => {
         setError(
