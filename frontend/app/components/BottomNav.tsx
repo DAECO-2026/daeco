@@ -12,7 +12,7 @@ type NavItem = {
 
 const ITEMS: NavItem[] = [
   { label: "홈", href: "/home", Icon: HomeIcon },
-  { label: "지도", Icon: MapPinIcon },
+  { label: "지도", href: "/map", Icon: MapPinIcon },
   { label: "즐겨찾기", Icon: BookmarkIcon },
 ];
 

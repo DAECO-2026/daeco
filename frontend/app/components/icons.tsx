@@ -93,6 +93,21 @@ export function BookmarkIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+/** 돋보기 (검색) */
+export function SearchIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="m20 20-3.2-3.2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /** 왼쪽 화살표 (뒤로가기) */
 export function ChevronLeftIcon(props: SVGProps<SVGSVGElement>) {
   return (
