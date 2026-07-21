@@ -27,6 +27,12 @@ function formatNumber(value: string): string {
 }
 
 /** "HH:mm"(24h) → "오전/오후 hh:mm" 표시용 */
+/** 현재 시각 "HH:mm" (피커 초기 위치용) */
+function nowHHmm(): string {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
 function formatDisplayTime(hhmm: string): string {
   const [h, m] = hhmm.split(":").map(Number);
   const ampm = h < 12 ? "오전" : "오후";
@@ -65,10 +71,10 @@ export default function CreateRoutePage() {
   const [routeName, setRouteName] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [locating, setLocating] = useState(false);
-  const [curTime, setCurTime] = useState("15:20");
+  const [curTime, setCurTime] = useState("");
   const [budget, setBudget] = useState("");
   const [arriveLocation, setArriveLocation] = useState("");
-  const [deadLine, setDeadLine] = useState("18:00");
+  const [deadLine, setDeadLine] = useState("");
   const [transports, setTransports] = useState<string[]>([]);
 
   // 시간 피커 (열린 대상)
@@ -139,6 +145,10 @@ export default function CreateRoutePage() {
 
     if (!payload.curLocation || !payload.arriveLocation) {
       setError("현재 위치와 복귀 장소를 입력해주세요.");
+      return;
+    }
+    if (!curTime || !deadLine) {
+      setError("출발 시각과 복귀 마감 시각을 선택해주세요.");
       return;
     }
 
@@ -229,7 +239,9 @@ export default function CreateRoutePage() {
             className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-11 text-left text-sm text-zinc-800"
           >
             <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-            {formatDisplayTime(curTime)}
+            <span className={curTime ? "" : "text-zinc-400"}>
+              {curTime ? formatDisplayTime(curTime) : "시간 선택"}
+            </span>
             <ChevronDownIcon className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
           </button>
         </section>
@@ -285,7 +297,9 @@ export default function CreateRoutePage() {
               className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-4 text-left text-sm text-zinc-800"
             >
               <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-              {formatDisplayTime(deadLine)}
+              <span className={deadLine ? "" : "text-zinc-400"}>
+                {deadLine ? formatDisplayTime(deadLine) : "시간 선택"}
+              </span>
             </button>
           </div>
         </section>
@@ -330,7 +344,11 @@ export default function CreateRoutePage() {
       {/* 시간 휠 피커 */}
       {picker && (
         <TimeWheelPicker
-          initial={picker === "cur" ? curTime : deadLine}
+          initial={
+            picker === "cur"
+              ? curTime || nowHHmm()
+              : deadLine || "18:00"
+          }
           onConfirm={(v) => {
             if (picker === "cur") setCurTime(v);
             else setDeadLine(v);
