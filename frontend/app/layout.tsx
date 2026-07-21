@@ -27,7 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} h-full`}>
+    <html
+      lang="ko"
+      className={`${notoSansKr.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="h-full">
         {/* 모바일 웹앱 프레임: 데스크톱에서는 가운데 정렬된 폰 너비 컬럼 */}
         <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-white shadow-xl">
