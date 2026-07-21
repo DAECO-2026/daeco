@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const SPLASH_DURATION = 2200;
-const FADE_DURATION = 500;
+const SPLASH_DURATION = 1300;
+const FADE_DURATION = 400;
 
 export default function SplashPage() {
   const router = useRouter();
