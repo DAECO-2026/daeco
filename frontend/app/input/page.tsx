@@ -9,6 +9,8 @@ import {
   CrosshairIcon,
   MapIcon,
 } from "../components/icons";
+import { requestRouteRecommendation, toLocalTime } from "../lib/api";
+import type { RouteRequest } from "../lib/types";
 
 const PLACE_TYPES = [
   "카페",
@@ -53,11 +55,23 @@ function Chip({
 export default function CreateRoutePage() {
   const router = useRouter();
 
+  // 폼 상태
+  const [routeName, setRouteName] = useState("");
   const [locationMode, setLocationMode] = useState<"current" | "manual">(
     "current",
   );
+  const [currentLocation] = useState("성심당 본점"); // TODO: geolocation 연동
+  const [manualLocation, setManualLocation] = useState("");
+  const [curTime, setCurTime] = useState("15:20");
+  const [arriveLocation, setArriveLocation] = useState("대전역");
+  const [deadLine, setDeadLine] = useState("18:00");
   const [types, setTypes] = useState<string[]>([]);
   const [conditions, setConditions] = useState<string[]>([]);
+  const [conditionText, setConditionText] = useState("");
+
+  // 요청 상태
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const toggle = (
     value: string,
@@ -69,6 +83,45 @@ export default function CreateRoutePage() {
         ? list.filter((v) => v !== value)
         : [...list, value],
     );
+
+  const handleRecommend = async () => {
+    const curLocation = (
+      locationMode === "current" ? currentLocation : manualLocation
+    ).trim();
+
+    // 백엔드 RequestDTO 필드에 맞춰 매핑 (루트 이름·현장 조건은 백엔드 미수신 → 제외)
+    const payload: RouteRequest = {
+      curLocation,
+      curTime: toLocalTime(curTime),
+      arriveLocation: arriveLocation.trim(),
+      deadLine: toLocalTime(deadLine),
+      preferLocation: types,
+    };
+
+    if (!curLocation || !payload.arriveLocation) {
+      setError("현재 위치와 복귀 장소를 입력해주세요.");
+      return;
+    }
+
+    setError(null);
+    setSubmitting(true);
+    try {
+      const result = await requestRouteRecommendation(payload);
+      // 결과 화면은 아직 디자인 전 → 응답을 세션에 보관하고 로그로 확인
+      sessionStorage.setItem("daeco:lastRequest", JSON.stringify(payload));
+      sessionStorage.setItem("daeco:recommendation", JSON.stringify(result));
+      console.log("[DAECO] 추천 요청:", payload);
+      console.log("[DAECO] 추천 응답:", result);
+      // TODO: 결과 화면 디자인 확정 시 router.push("/result")로 이동
+      router.push("/result");
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "요청 중 오류가 발생했습니다.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-white">
@@ -94,6 +147,8 @@ export default function CreateRoutePage() {
           </label>
           <input
             type="text"
+            value={routeName}
+            onChange={(e) => setRouteName(e.target.value)}
             placeholder="예) 빵지순례 투어"
             className={`mt-2 ${inputClass}`}
           />
@@ -133,7 +188,7 @@ export default function CreateRoutePage() {
               <div className="flex-1">
                 <p className="text-xs text-zinc-400">현재 위치</p>
                 <p className="text-sm font-medium text-zinc-800">
-                  성심당 본점
+                  {currentLocation}
                 </p>
               </div>
               <button
@@ -147,6 +202,8 @@ export default function CreateRoutePage() {
           ) : (
             <input
               type="text"
+              value={manualLocation}
+              onChange={(e) => setManualLocation(e.target.value)}
               placeholder="출발 위치를 입력하세요."
               className={`mt-3 ${inputClass}`}
             />
@@ -162,7 +219,8 @@ export default function CreateRoutePage() {
             <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
             <input
               type="text"
-              defaultValue="15:20"
+              value={curTime}
+              onChange={(e) => setCurTime(e.target.value)}
               className={`${inputClass} pl-11`}
             />
           </div>
@@ -178,7 +236,8 @@ export default function CreateRoutePage() {
               <LocationOutlineIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
               <input
                 type="text"
-                defaultValue="대전역"
+                value={arriveLocation}
+                onChange={(e) => setArriveLocation(e.target.value)}
                 className={`${inputClass} pl-11`}
               />
             </div>
@@ -191,7 +250,8 @@ export default function CreateRoutePage() {
               <ClockIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
               <input
                 type="text"
-                defaultValue="18:00"
+                value={deadLine}
+                onChange={(e) => setDeadLine(e.target.value)}
                 className={`${inputClass} pl-11`}
               />
             </div>
@@ -233,6 +293,8 @@ export default function CreateRoutePage() {
           </div>
           <input
             type="text"
+            value={conditionText}
+            onChange={(e) => setConditionText(e.target.value)}
             placeholder="조건을 입력하세요."
             className={`mt-3 ${inputClass}`}
           />
@@ -241,12 +303,17 @@ export default function CreateRoutePage() {
 
       {/* 추천 버튼 */}
       <div className="px-6 pb-6 pt-2">
+        {error && (
+          <p className="mb-3 text-center text-sm text-red-500">{error}</p>
+        )}
         <button
           type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
+          onClick={handleRecommend}
+          disabled={submitting}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong disabled:opacity-60"
         >
           <MapIcon className="h-5 w-5" />
-          AI 루트 추천받기
+          {submitting ? "루트 추천 받는 중..." : "AI 루트 추천받기"}
         </button>
       </div>
     </div>
