@@ -32,9 +32,15 @@ function formatDist(km: number): string {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km}km`;
 }
 
+// 출발지(현재 위치)에 항상 쓰는 충남대 이미지
+const CNU_IMAGE =
+  "https://cdn.cctoday.co.kr/news/photo/202504/2211353_657609_2233.jpg";
+
 // 백엔드에 이미지가 없는 장소용 프론트 폴백 이미지 (장소명 부분 일치)
 const PLACE_IMAGE_FALLBACK: Record<string, string> = {
-  충남대: "https://cdn.cctoday.co.kr/news/photo/202504/2211353_657609_2233.jpg",
+  충남대: CNU_IMAGE,
+  대전역:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Daejeon_Station_2017.JPG/500px-Daejeon_Station_2017.JPG",
 };
 
 /** 장소명에 폴백 키가 포함되면 해당 이미지 반환 (예: "충남대학교" → "충남대") */
@@ -201,7 +207,11 @@ export default function RouteDetailPage() {
                           )}
                         </div>
                         <StopImage
-                          urls={[fallbackImage(s.locationName), s.imageUrl]}
+                          urls={
+                            isFirst
+                              ? [CNU_IMAGE]
+                              : [fallbackImage(s.locationName), s.imageUrl]
+                          }
                         />
 
                       </div>
