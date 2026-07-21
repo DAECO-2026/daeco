@@ -11,6 +11,11 @@
   --pin-purple: #6d4ade;
   --pin-green: #8bc34a;
   --route: #3f51d6;
+
+  /* 경로 순위별 색상 (1순위 주색 / 2순위 초록 / 3순위 회색) */
+  --route-1: #6b7fb8;
+  --route-2: #7c8a4e;
+  --route-3: #d6d6d6;
 }
 
 @theme inline {

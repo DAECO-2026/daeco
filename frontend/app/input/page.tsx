@@ -148,7 +148,7 @@ export default function CreateRoutePage() {
       const result = await requestRouteRecommendation(payload);
       sessionStorage.setItem("daeco:lastRequest", JSON.stringify(payload));
       sessionStorage.setItem("daeco:recommendation", JSON.stringify(result));
-      router.push("/result");
+      router.push("/map");
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "요청 중 오류가 발생했습니다.",

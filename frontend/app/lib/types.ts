@@ -23,6 +23,7 @@ export interface StopoverDetail {
   transportation: string; // 이동 수단
   movementTime: string; // 이 지점까지 이동 시간 "HH:mm:ss"
   movementDistance: number; // 이 지점까지 이동 거리 (km)
+  imageUrl: string | null; // 장소 이미지 (없을 수 있음)
 }
 
 /** 추천 코스 1개 — 백엔드 ResponseDTO.Stopover */
