@@ -19,7 +19,7 @@
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-ink: var(--brand-ink);
-  --font-sans: var(--font-noto-sans-kr);
+  --font-sans: var(--font-pretendard);
 }
 
 html,
@@ -30,7 +30,7 @@ body {
 body {
   color: var(--foreground);
   background: #000;
-  font-family: var(--font-noto-sans-kr), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-pretendard), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
