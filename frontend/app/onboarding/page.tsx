@@ -22,15 +22,15 @@ export default function OnboardingPage() {
         </p>
       </div>
 
-      {/* 지도 일러스트 (왼쪽 모서리에 붙임) */}
-      <div className="-mx-8 flex flex-1 items-center justify-start">
+      {/* 지도 일러스트 (좌우 꽉 차게) */}
+      <div className="-mx-8 flex flex-1 items-center justify-center">
         <Image
           src="/map.png"
           alt="추천 루트 지도"
-          width={553}
-          height={486}
+          width={398}
+          height={429}
           priority
-          className="h-auto w-[112%] max-w-none"
+          className="h-auto w-full"
         />
       </div>
 
