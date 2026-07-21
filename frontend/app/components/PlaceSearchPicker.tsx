@@ -44,11 +44,11 @@ export default function PlaceSearchPicker({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/40"
+      className="animate-fade-in fixed inset-0 z-50 flex flex-col justify-end bg-black/40"
       onClick={onClose}
     >
       <div
-        className="mx-auto flex h-[80dvh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-3xl bg-white"
+        className="animate-slide-up mx-auto flex h-[80dvh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-3xl bg-white"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
