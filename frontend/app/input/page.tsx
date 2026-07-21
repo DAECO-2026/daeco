@@ -127,14 +127,14 @@ export default function CreateRoutePage() {
   };
 
   const handleRecommend = async () => {
-    // 백엔드 RequestDTO 필드에 맞춰 매핑
-    // (루트 이름·총 예산·이동 수단은 백엔드 미수신 → 제외, preferLocation은 현재 UI 미수집)
+    // 백엔드 RequestDTO 필드에 맞춰 매핑 (루트 이름은 백엔드 미수신 → 제외)
     const payload: RouteRequest = {
       curLocation: currentLocation.trim(),
       curTime: toLocalTime(curTime),
       arriveLocation: arriveLocation.trim(),
       deadLine: toLocalTime(deadLine),
-      preferLocation: [],
+      preferTransportation: transports,
+      budget: Number(budget.replace(/\D/g, "")) || 0,
     };
 
     if (!payload.curLocation || !payload.arriveLocation) {
