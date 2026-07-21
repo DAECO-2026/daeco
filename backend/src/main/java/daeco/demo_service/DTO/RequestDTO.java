@@ -8,5 +8,6 @@ public record RequestDTO(
         LocalTime curTime,
         String arriveLocation,
         LocalTime deadLine,
-        List<String> preferLocation
+        String preferMovement,
+        int budget
 ) {}

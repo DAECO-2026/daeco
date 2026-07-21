@@ -4,16 +4,22 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record ResponseDTO(
-        int stopoverCount,
-        List<StopoverDetail> stopovers,
-        LocalTime arriveTime,
-        String remainTime
+        List<Stopover> stopoverList
 ) {
-    public record StopoverDetail(
-            int sequence,
-            String locationName,
-            String pathTime,
-            String recommendStayTime,
-            String recommendReason
-    ) {}
+    public record Stopover(
+            int stopoverCount,
+            List<StopoverDetail> stopovers,
+            LocalTime arriveTime,
+            String remainTime
+    ) {
+        public record StopoverDetail(
+                int sequence,
+                String locationName,
+                String pathTime,
+                String recommendStayTime,
+                String recommendReason,
+                int budget
+        ) {
+        }
+    }
 }
