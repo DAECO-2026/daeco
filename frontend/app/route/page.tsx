@@ -187,9 +187,8 @@ export default function RouteDetailPage() {
                             </p>
                           )}
                         </div>
-                        <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-[11px] text-zinc-400">
-                          상점별 사진
-                        </div>
+                        <StopImage url={s.imageUrl} />
+
                       </div>
                     </div>
 
@@ -231,6 +230,27 @@ export default function RouteDetailPage() {
         )}
       </div>
     </div>
+  );
+}
+
+/** 장소 이미지 — URL 없거나 로드 실패 시 placeholder */
+function StopImage({ url }: { url: string | null }) {
+  const [failed, setFailed] = useState(false);
+  if (!url || failed) {
+    return (
+      <div className="flex h-16 w-20 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-[11px] text-zinc-400">
+        상점별 사진
+      </div>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt=""
+      onError={() => setFailed(true)}
+      className="h-16 w-20 shrink-0 rounded-xl object-cover"
+    />
   );
 }
 
