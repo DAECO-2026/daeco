@@ -62,7 +62,8 @@ export default function CreateRoutePage() {
 
   // 폼 상태
   const [routeName, setRouteName] = useState("");
-  const [currentLocation] = useState("성심당 본점"); // TODO: geolocation 연동
+  const [currentLocation, setCurrentLocation] = useState("성심당 본점");
+  const [locating, setLocating] = useState(false);
   const [curTime, setCurTime] = useState("15:20");
   const [budget, setBudget] = useState("");
   const [arriveLocation, setArriveLocation] = useState("대전역");
@@ -82,6 +83,34 @@ export default function CreateRoutePage() {
         ? prev.filter((v) => v !== value)
         : [...prev, value],
     );
+
+  const handleUseCurrentLocation = () => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setError("이 브라우저에서는 위치 기능을 지원하지 않아요.");
+      return;
+    }
+    setError(null);
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        // TODO: 카카오 지도 API로 좌표 → 장소명 역지오코딩
+        setCurrentLocation(
+          `위도 ${latitude.toFixed(5)}, 경도 ${longitude.toFixed(5)}`,
+        );
+        setLocating(false);
+      },
+      (err) => {
+        setError(
+          err.code === err.PERMISSION_DENIED
+            ? "위치 권한이 거부됐어요. 브라우저 설정에서 위치를 허용해주세요."
+            : "현재 위치를 가져올 수 없어요. 잠시 후 다시 시도해주세요.",
+        );
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+  };
 
   const handleRecommend = async () => {
     // 백엔드 RequestDTO 필드에 맞춰 매핑
@@ -151,18 +180,20 @@ export default function CreateRoutePage() {
           <p className="text-[15px] font-bold text-zinc-900">위치</p>
           <div className="mt-2 flex items-center gap-3 rounded-xl border border-zinc-200 px-4 py-3">
             <LocationOutlineIcon className="h-5 w-5 shrink-0 text-zinc-500" />
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <p className="text-xs text-zinc-400">현재 위치</p>
-              <p className="text-sm font-medium text-zinc-800">
-                {currentLocation}
+              <p className="truncate text-sm font-medium text-zinc-800">
+                {locating ? "위치 확인 중..." : currentLocation}
               </p>
             </div>
             <button
               type="button"
-              aria-label="현재 위치 새로고침"
-              className="text-brand"
+              aria-label="현재 위치 가져오기"
+              onClick={handleUseCurrentLocation}
+              disabled={locating}
+              className="shrink-0 text-brand disabled:opacity-50"
             >
-              <CrosshairIcon className="h-5 w-5" />
+              <CrosshairIcon className={`h-5 w-5 ${locating ? "animate-spin" : ""}`} />
             </button>
           </div>
         </section>
