@@ -13,6 +13,7 @@ import {
 import { requestRouteRecommendation, toLocalTime } from "../lib/api";
 import type { RouteRequest } from "../lib/types";
 import TimeWheelPicker from "../components/TimeWheelPicker";
+import PlaceSearchPicker from "../components/PlaceSearchPicker";
 
 const TRANSPORTS = ["택시", "대중교통", "도보"];
 
@@ -72,6 +73,9 @@ export default function CreateRoutePage() {
 
   // 시간 피커 (열린 대상)
   const [picker, setPicker] = useState<"cur" | "dead" | null>(null);
+
+  // 복귀 장소 검색 피커
+  const [placeSearchOpen, setPlaceSearchOpen] = useState(false);
 
   // 요청 상태
   const [submitting, setSubmitting] = useState(false);
@@ -254,15 +258,14 @@ export default function CreateRoutePage() {
             <label className="text-[15px] font-bold text-zinc-900">
               복귀 장소
             </label>
-            <div className="relative mt-2">
+            <button
+              type="button"
+              onClick={() => setPlaceSearchOpen(true)}
+              className="relative mt-2 flex w-full items-center rounded-xl border border-zinc-200 py-3 pl-11 pr-4 text-left text-sm text-zinc-800"
+            >
               <LocationOutlineIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-              <input
-                type="text"
-                value={arriveLocation}
-                onChange={(e) => setArriveLocation(e.target.value)}
-                className={`${inputClass} pl-11`}
-              />
-            </div>
+              <span className="truncate">{arriveLocation}</span>
+            </button>
           </div>
           <div>
             <label className="text-[15px] font-bold text-zinc-900">
@@ -326,6 +329,18 @@ export default function CreateRoutePage() {
             setPicker(null);
           }}
           onClose={() => setPicker(null)}
+        />
+      )}
+
+      {/* 복귀 장소 검색 피커 */}
+      {placeSearchOpen && (
+        <PlaceSearchPicker
+          title="복귀 장소 검색"
+          onConfirm={(name) => {
+            setArriveLocation(name);
+            setPlaceSearchOpen(false);
+          }}
+          onClose={() => setPlaceSearchOpen(false)}
         />
       )}
     </div>
