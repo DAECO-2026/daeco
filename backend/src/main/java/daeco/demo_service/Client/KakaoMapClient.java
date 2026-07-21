@@ -117,6 +117,39 @@ public class KakaoMapClient {
     }
 
     /**
+     * 장소명으로 대표 이미지 URL 1개를 검색해 반환. 실패 시 null.
+     * 카카오 이미지 검색 API (/v2/search/image). 로컬과 동일한 REST 키/헤더 사용.
+     * ⚠️ 콘솔에서 '검색' 서비스 활성화가 필요할 수 있음(미활성 시 403 -> null 반환).
+     */
+    public String searchImageUrl(String name) {
+        if (name == null || name.isBlank()) return null;
+        try {
+            String q = name.contains("대전") ? name : "대전 " + name;
+            JsonNode res = localClient.get()
+                    .uri(uri -> uri.path("/v2/search/image")
+                            .queryParam("query", q)
+                            .queryParam("size", 1)      // 1개만
+                            .queryParam("sort", "accuracy")
+                            .build())
+                    .retrieve()
+                    .body(JsonNode.class);
+
+            if (res == null) return null;
+            JsonNode docs = res.get("documents");
+            if (docs == null || !docs.isArray() || docs.isEmpty()) return null;
+
+            // image_url: 원본, thumbnail_url: 썸네일. 안정성 위해 thumbnail 우선 사용 가능.
+            JsonNode first = docs.get(0);
+            String url = textOf(first, "image_url");
+            if (url.isBlank()) url = textOf(first, "thumbnail_url");
+            return url.isBlank() ? null : url;
+        } catch (Exception e) {
+            log.warn("이미지 검색 실패 '{}': {}", name, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * 두 좌표 사이 이동 결과를 이동수단별로 반환.
      * @param mode "도보" | "버스" | "자동차"
      */

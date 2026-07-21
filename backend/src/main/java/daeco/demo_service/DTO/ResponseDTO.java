@@ -29,7 +29,8 @@ public record ResponseDTO(
                 int budget,                  // 이 구간 지출 (장소 지출 + 이 구간 교통비)
                 String transportation,       // 이동 수단
                 LocalTime movementTime,       // 이 지점까지 오는 이동 시간 (카카오 계산)
-                double movementDistance      // 이 지점까지 오는 이동 거리 km (카카오 계산)
+                double movementDistance,     // 이 지점까지 오는 이동 거리 km (카카오 계산)
+                String imageUrl              // 장소 대표 이미지 URL (프론트 img src용, 없으면 null)
         ) {
         }
     }

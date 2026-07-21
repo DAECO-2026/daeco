@@ -152,7 +152,7 @@ public class RouteBuilder {
 
     private record Detail(int sequence, LocalTime arrive, String name, int stayMin,
                           boolean fee, String reason, int budget,
-                          String mode, int moveMin, double km) {
+                          String mode, int moveMin, double km, String imageUrl) {
         LocalTime arriveAsTime() { return arrive; }
     }
 
@@ -165,7 +165,7 @@ public class RouteBuilder {
         a.details.add(new Detail(
                 0, startTime, startName, 0,
                 false, "여행이 시작되는 출발지입니다.", 0,
-                mode, 0, 0.0
+                mode, 0, 0.0, null
         ));
 
         Coord prev = startCoord;
@@ -184,7 +184,7 @@ public class RouteBuilder {
                     i + 1, arrive, s.locationName(), stay,
                     s.entranceFee(), s.recommendReason(),
                     s.estimatedBudget() + leg.fare(), // 이 구간 지출 = 장소지출 + 교통비
-                    mode, leg.minutes(), leg.km()
+                    mode, leg.minutes(), leg.km(), null
             ));
 
             a.stayBudget += s.estimatedBudget();
@@ -203,7 +203,7 @@ public class RouteBuilder {
         a.details.add(new Detail(
                 stops.size() + 1, backArrive, arriveName, 0,
                 false, "여행을 마치고 복귀하는 지점입니다.", back.fare(),
-                mode, back.minutes(), back.km()
+                mode, back.minutes(), back.km(), null
         ));
         a.transportBudget += back.fare();
         a.totalKm += back.km();
@@ -245,7 +245,16 @@ public class RouteBuilder {
 
     private Stopover toStopover(Attempt a, int originalCount) {
         List<StopoverDetail> list = new ArrayList<>();
-        for (Detail d : a.details) {
+        int lastIdx = a.details.size() - 1;
+        for (int idx = 0; idx < a.details.size(); idx++) {
+            Detail d = a.details.get(idx);
+
+            // 출발지(첫)와 복귀지(마지막)는 이미지 검색 안 함. 경유지만 검색.
+            String imageUrl = null;
+            if (idx != 0 && idx != lastIdx) {
+                imageUrl = kakao.searchImageUrl(d.name());
+            }
+
             list.add(new StopoverDetail(
                     d.sequence(),
                     d.arrive().withSecond(0).toString().length() == 5
@@ -257,7 +266,8 @@ public class RouteBuilder {
                     d.budget(),
                     d.mode(),
                     LocalTime.of(d.moveMin() / 60, d.moveMin() % 60),
-                    d.km()
+                    d.km(),
+                    imageUrl
             ));
         }
         return new Stopover(
