@@ -32,6 +32,11 @@ function formatDist(km: number): string {
   return km < 1 ? `${Math.round(km * 1000)}m` : `${km}km`;
 }
 
+// 백엔드에 이미지가 없는 장소용 프론트 폴백 이미지 (장소명 기준)
+const PLACE_IMAGE_FALLBACK: Record<string, string> = {
+  충남대: "https://cdn.cctoday.co.kr/news/photo/202504/2211353_657609_2233.jpg",
+};
+
 function transportIcon(t: string) {
   if (t.includes("도보") || t.includes("걷")) return WalkIcon;
   if (t.includes("택시") || t.includes("자동차") || t.includes("차"))
@@ -187,7 +192,9 @@ export default function RouteDetailPage() {
                             </p>
                           )}
                         </div>
-                        <StopImage url={s.imageUrl} />
+                        <StopImage
+                          url={s.imageUrl ?? PLACE_IMAGE_FALLBACK[s.locationName] ?? null}
+                        />
 
                       </div>
                     </div>
