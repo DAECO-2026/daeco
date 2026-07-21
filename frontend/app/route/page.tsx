@@ -248,6 +248,7 @@ function StopImage({ url }: { url: string | null }) {
     <img
       src={url}
       alt=""
+      referrerPolicy="no-referrer"
       onError={() => setFailed(true)}
       className="h-16 w-20 shrink-0 rounded-xl object-cover"
     />
