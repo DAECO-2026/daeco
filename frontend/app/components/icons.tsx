@@ -93,6 +93,83 @@ export function BookmarkIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+/** 자동차 */
+export function CarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M5 11 6.4 6.8A2 2 0 0 1 8.3 5.5h7.4a2 2 0 0 1 1.9 1.3L19 11"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <rect
+        x="3.5"
+        y="11"
+        width="17"
+        height="6"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <circle cx="7.5" cy="17.5" r="1.3" fill="currentColor" />
+      <circle cx="16.5" cy="17.5" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** 도보 */
+export function WalkIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <circle cx="13" cy="4.5" r="2" fill="currentColor" />
+      <path
+        d="M13 8v6m0 0-3 5m3-5 3 4M9 11l4-2 3 2"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** 버스 (대중교통) */
+export function BusIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <rect
+        x="5"
+        y="4"
+        width="14"
+        height="13"
+        rx="2.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path d="M5 11h14" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="8.5" cy="19" r="1.3" fill="currentColor" />
+      <circle cx="15.5" cy="19" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** 정보 (i) */
+export function InfoIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M12 11v5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="8" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 /** 돋보기 (검색) */
 export function SearchIcon(props: SVGProps<SVGSVGElement>) {
   return (

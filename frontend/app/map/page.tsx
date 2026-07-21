@@ -4,6 +4,7 @@
 // 지도는 카카오 JS SDK로 대체 예정(현재 placeholder). 경로는 순위별 색으로 표시.
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { RouteResponse, RouteOption } from "../lib/types";
 import BottomNav from "../components/BottomNav";
 import KakaoRouteMap from "../components/KakaoRouteMap";
@@ -22,9 +23,17 @@ function formatDuration(hms: string): string {
 }
 
 export default function MapPage() {
+  const router = useRouter();
   const [options, setOptions] = useState<RouteOption[]>([]);
   const [selected, setSelected] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  const startRoute = () => {
+    const route = options[selected];
+    if (!route) return;
+    sessionStorage.setItem("daeco:selectedRoute", JSON.stringify(route));
+    router.push("/route");
+  };
 
   useEffect(() => {
     const raw = sessionStorage.getItem("daeco:recommendation");
@@ -167,6 +176,7 @@ export default function MapPage() {
         <div className="px-6 pb-4 pt-3">
           <button
             type="button"
+            onClick={startRoute}
             disabled={options.length === 0}
             className="w-full rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong disabled:opacity-50"
           >
