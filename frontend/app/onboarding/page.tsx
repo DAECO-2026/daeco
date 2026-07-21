@@ -7,9 +7,19 @@ export default function OnboardingPage() {
   const router = useRouter();
 
   return (
-    <div className="animate-fade-in-up flex flex-1 flex-col bg-white px-8 pt-28 pb-10">
+    <div className="animate-fade-in-up relative flex flex-1 flex-col overflow-hidden bg-white px-8 pt-28 pb-10">
+      {/* 스카이라인 워터마크 (홈과 동일 위치) */}
+      <Image
+        src="/city.png"
+        alt=""
+        width={414}
+        height={317}
+        priority
+        className="pointer-events-none absolute left-0 -top-24 w-full opacity-[0.06] invert"
+      />
+
       {/* 헤드라인 */}
-      <div className="text-center">
+      <div className="relative z-10 text-center">
         <h1 className="text-2xl font-bold leading-9 text-brand-ink">
           AI 맞춤 추천으로
           <br />
@@ -23,7 +33,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* 지도 일러스트 (좌우 꽉 차게) */}
-      <div className="-mx-8 flex flex-1 items-center justify-center">
+      <div className="relative z-10 -mx-8 flex flex-1 items-center justify-center">
         <Image
           src="/map.png"
           alt="추천 루트 지도"
@@ -38,7 +48,7 @@ export default function OnboardingPage() {
       <button
         type="button"
         onClick={() => router.push("/home")}
-        className="w-full rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
+        className="relative z-10 w-full rounded-2xl bg-brand py-4 text-base font-bold text-white transition-colors hover:bg-brand-strong active:bg-brand-strong"
       >
         시작하기
       </button>
