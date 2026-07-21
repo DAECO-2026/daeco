@@ -40,7 +40,7 @@ export default function HomePage() {
         width={414}
         height={317}
         priority
-        className="pointer-events-none absolute left-0 top-0 w-full opacity-[0.06] invert"
+        className="pointer-events-none absolute left-0 -top-24 w-full opacity-[0.06] invert"
       />
 
       {/* 헤더 */}
