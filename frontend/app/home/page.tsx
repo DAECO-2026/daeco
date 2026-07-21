@@ -95,9 +95,13 @@ export default function HomePage() {
             type="button"
             className="mt-3 flex w-full gap-3 rounded-2xl border border-zinc-200 p-3 text-left transition-colors hover:bg-zinc-50"
           >
-            <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-[11px] text-zinc-400">
-              대표 사진
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Sungsimdang_2019.jpg/330px-Sungsimdang_2019.jpg"
+              alt="성심당 본점"
+              referrerPolicy="no-referrer"
+              className="h-20 w-24 shrink-0 rounded-xl object-cover"
+            />
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-zinc-900">대전 핫플 완전 정복</h3>
@@ -144,15 +148,6 @@ export default function HomePage() {
         >
           <PlusIcon className="h-5 w-5" />새 루트 만들기
         </Link>
-
-        {/* 하단 도들 장식 */}
-        <Image
-          src="/route-doodle.png"
-          alt=""
-          width={371}
-          height={210}
-          className="pointer-events-none mt-6 ml-auto w-3/5 opacity-40"
-        />
       </div>
 
       <BottomNav />
