@@ -32,13 +32,13 @@ public class KakaoMapClient {
     private final RestClient naviClient;
 
     // 버스 근사 보정: 자동차 시간에 곱하는 계수 + 평균 대기시간(분)
-    private static final double BUS_FACTOR = 1.7;
-    private static final int BUS_WAIT_MINUTES = 8;
+    private static final double BUS_FACTOR = 1.5;
+    private static final int BUS_WAIT_MINUTES = 6;
     // 도보 속도 근사: 시속 4.5km 기준으로 거리로부터 시간 산출
     private static final double WALK_KMPH = 4.5;
     // 자동차 길찾기 실패 시: 직선거리 -> 실제 도로거리 보정계수, 자동차 평균 시속
     private static final double ROAD_FACTOR = 1.3;
-    private static final double CAR_KMPH = 30.0;
+    private static final double CAR_KMPH = 36.0;
 
     public KakaoMapClient(@Value("${kakao.rest-api-key}") String restApiKey) {
         String auth = "KakaoAK " + restApiKey;
@@ -62,8 +62,11 @@ public class KakaoMapClient {
      * 장소명 -> 좌표. "대전"을 붙여 지역을 좁히고, 결과 중 대전 소재를 우선 선택.
      * 실패 시 null 반환 (호출부에서 '실제 존재하지 않는 장소'로 처리).
      */
-    public Coord searchPlace(String name) {
-        if (name == null || name.isBlank()) return null;
+    public Coord searchPlace(String rawName) {
+        if (rawName == null || rawName.isBlank()) return null;
+        // 장소명에 섞인 일본어 가나/한자 제거 (예: '아웃レット' -> '아웃')
+        String name = rawName.replaceAll("[\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff]", "").trim();
+        if (name.isBlank()) name = rawName; // 전부 제거되면 원본 사용
 
         // 여러 검색어 변형을 순서대로 시도한다.
         // 1) 이름에 이미 '대전'이 있으면 그대로, 없으면 '대전 ' 접두어를 붙여 지역 한정
@@ -71,12 +74,15 @@ public class KakaoMapClient {
         // 3) '대전' 접미어
         List<String> queries = new ArrayList<>();
         if (name.contains("대전")) {
-            queries.add(name);
-            queries.add(name.replace("대전광역시", "대전").trim());
+            queries.add(name);            // 이름 그대로
         } else {
-            queries.add("대전 " + name);
-            queries.add(name);
-            queries.add(name + " 대전");
+            queries.add("대전 " + name);  // 지역 한정
+            queries.add(name);            // 지역어 없이
+        }
+        // '광역시' 같은 행정 접미어가 붙어 검색이 안 될 때 대비: 접미어 제거판 추가
+        String simplified = name.replace("광역시", "").replaceAll("\\s+", " ").trim();
+        if (!simplified.equals(name) && !simplified.isBlank()) {
+            queries.add(simplified);
         }
 
         for (String q : queries) {

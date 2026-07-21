@@ -26,7 +26,7 @@ public class DaecoService {
     private final RouteBuilder routeBuilder;
 
     private static final int TARGET_ROUTES = 3;        // 최종 목표 루트 개수
-    private static final int MAX_TOTAL_ATTEMPTS = 8;   // 전체 재요청 상한(무한루프 방지)
+    private static final int MAX_TOTAL_ATTEMPTS = 10;   // 전체 재요청 상한(무한루프 방지)
 
     public DaecoService(ChatClient.Builder builder, RouteBuilder routeBuilder) {
         this.chatClient = builder.build();
@@ -147,7 +147,7 @@ public class DaecoService {
                 .entity(LlmRouteDTO.class);
     }
 
-    /** 추천 이유에 CJK가 섞였으면 LLM에게 그 필드만 한국어로 재작성 요청 */
+    /** 추천 이유·장소명에 CJK가 섞였으면 정리 */
     private LlmRoute sanitizeKorean(LlmRoute route) {
         List<LlmStop> cleaned = new ArrayList<>();
         for (LlmStop s : route.stops()) {
@@ -155,7 +155,12 @@ public class DaecoService {
             if (KoreanTextValidator.hasNonKorean(reason)) {
                 reason = retranslateToKorean(reason);
             }
-            cleaned.add(new LlmStop(s.sequence(), s.locationName(),
+            // 장소명은 번역이 아니라 표기 정정이므로 정규식 제거만 (토큰 절약)
+            String name = s.locationName();
+            if (KoreanTextValidator.hasNonKorean(name)) {
+                name = stripCjk(name);
+            }
+            cleaned.add(new LlmStop(s.sequence(), name,
                     s.recommendStayMinutes(), s.entranceFee(), reason, s.estimatedBudget()));
         }
         return new LlmRoute(cleaned);
