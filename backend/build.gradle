@@ -1,0 +1,45 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.11'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'daeco'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+	// 마일스톤 리포지토리가 남아있다면 제거하거나 유지합니다.
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+	// 모든 Spring AI 모듈 버전을 1.0.0으로 통일
+	set('springAiVersion', "1.0.0")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// Spring AI OpenAI Starter
+	implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+	}
+}
